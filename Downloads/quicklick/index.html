@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quicklick – Your Daily Essentials, Delivered!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        /* ----- RESET & BASE (unchanged) ----- */
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --primary-dark-blue: #002060;
+            --primary-blue: #0038B8;
+            --bright-blue: #0080F0;
+            --sky-blue: #00B8F0;
+            --primary-orange: #F06000;
+            --bright-orange: #FF8000;
+            --dark-text: #0B1736;
+            --white: #FFFFFF;
+            --light-blue-bg: #F3F8FF;
+            --light-orange-bg: #FFF4EA;
+            --blue-gradient: linear-gradient(135deg, #0038B8 0%, #0080F0 100%);
+            --orange-gradient: linear-gradient(135deg, #F06000 0%, #FF8000 100%);
+            --shadow: 0 20px 60px rgba(0,0,0,0.08);
+            --shadow-hover: 0 30px 80px rgba(0,0,0,0.12);
+            --shadow-blue: 0 10px 30px rgba(0,56,184,0.30);
+            --shadow-orange: 0 10px 30px rgba(240,96,0,0.30);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --transition: 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        html { scroll-behavior:smooth; }
+        body { font-family:'Inter', sans-serif; background:var(--white); color:var(--dark-text); line-height:1.6; overflow-x:hidden; }
+        a { text-decoration:none; color:inherit; }
+        img { max-width:100%; display:block; }
+        .container { max-width:1200px; margin:0 auto; padding:0 24px; }
+
+        /* ----- BUTTONS (unchanged) ----- */
+        .btn-primary {
+            display:inline-flex; align-items:center; gap:10px;
+            background:var(--blue-gradient);
+            color:var(--white);
+            padding:14px 36px; border-radius:50px;
+            font-weight:700; font-size:0.95rem; border:none; cursor:pointer;
+            transition:var(--transition);
+            box-shadow:var(--shadow-blue);
+            letter-spacing:0.3px;
+        }
+        .btn-primary:hover { transform:translateY(-4px) scale(1.03); box-shadow:0 16px 40px rgba(0,56,184,0.45); }
+
+        .btn-secondary {
+            display:inline-flex; align-items:center; gap:10px;
+            background:var(--white); color:var(--primary-blue);
+            padding:14px 36px; border-radius:50px;
+            font-weight:700; font-size:0.95rem; border:2px solid var(--primary-blue); cursor:pointer;
+            transition:var(--transition);
+        }
+        .btn-secondary:hover { background:var(--primary-blue); color:var(--white); transform:translateY(-4px); box-shadow:0 10px 30px rgba(0,56,184,0.25); }
+
+        /* ----- HEADER – now matches footer (dark blue) ----- */
+        .header {
+            position:fixed; top:0; left:0; right:0; z-index:1000;
+            background:var(--primary-dark-blue); /* changed to dark blue */
+            backdrop-filter:blur(16px);
+            -webkit-backdrop-filter:blur(16px);
+            border-bottom:1px solid rgba(255,255,255,0.08);
+            transition:var(--transition);
+        }
+        .header.scrolled { box-shadow:0 8px 30px rgba(0,0,0,0.2); }
+        .header-inner { display:flex; align-items:center; justify-content:space-between; height:72px; }
+        .logo { display:flex; align-items:center; gap:10px; font-size:1.6rem; font-weight:800; letter-spacing:-0.5px; }
+        .logo .quick { color:var(--sky-blue); }  /* sky blue for dark bg */
+        .logo .lick { color:var(--primary-orange); } /* orange */
+        .logo img { height:40px; width:auto; }
+
+        .nav-links { display:flex; align-items:center; gap:32px; list-style:none; }
+        .nav-links a { font-size:0.9rem; font-weight:600; color:var(--white); transition:var(--transition); position:relative; }
+        .nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px; background:linear-gradient(90deg, var(--sky-blue), var(--bright-orange)); transition:var(--transition); }
+        .nav-links a:hover { color:var(--sky-blue); }
+        .nav-links a:hover::after { width:100%; }
+        .nav-actions { display:flex; align-items:center; gap:16px; }
+        .nav-actions .lang-toggle {
+            display:flex; align-items:center; gap:4px; font-size:0.85rem; font-weight:600;
+            color:var(--white); cursor:pointer; padding:6px 14px; border-radius:30px;
+            background:rgba(255,255,255,0.12); transition:var(--transition); border:1px solid rgba(255,255,255,0.15);
+        }
+        .nav-actions .lang-toggle:hover { background:rgba(255,255,255,0.25); }
+        .nav-actions .lang-toggle .flag { font-size:1.1rem; }
+        .mobile-toggle { display:none; font-size:1.5rem; background:none; border:none; color:var(--white); cursor:pointer; padding:4px; }
+
+        /* ----- HERO (unchanged) ----- */
+        .hero {
+            padding:160px 0 100px;
+            background: linear-gradient(165deg, var(--light-blue-bg) 0%, #e6f0ff 50%, var(--light-orange-bg) 100%);
+            position:relative; overflow:hidden;
+        }
+        .hero::before { content:''; position:absolute; top:-20%; right:-15%; width:700px; height:700px; background:radial-gradient(circle, rgba(0,56,184,0.06) 0%, transparent 70%); border-radius:50%; pointer-events:none; }
+        .hero::after { content:''; position:absolute; bottom:-25%; left:-10%; width:600px; height:600px; background:radial-gradient(circle, rgba(240,96,0,0.06) 0%, transparent 70%); border-radius:50%; pointer-events:none; }
+        .hero-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; position:relative; z-index:2; }
+        .hero-content h1 { font-size:4.2rem; font-weight:900; line-height:1.05; letter-spacing:-2px; margin-bottom:20px; }
+        .hero-content h1 .highlight-blue { color:var(--primary-blue); }
+        .hero-content h1 .highlight-orange { color:var(--primary-orange); }
+        .hero-content p { font-size:1.2rem; color:var(--dark-text); max-width:480px; margin-bottom:36px; line-height:1.7; opacity:0.8; }
+        .hero-badge { display:inline-flex; align-items:center; gap:8px; background:var(--light-blue-bg); color:var(--primary-blue); padding:8px 20px; border-radius:50px; font-size:0.85rem; font-weight:700; margin-bottom:24px; border:1px solid rgba(0,56,184,0.15); }
+        .hero-badge i { font-size:0.9rem; }
+        .hero-buttons { display:flex; flex-wrap:wrap; gap:16px; }
+        .hero-visual { display:flex; justify-content:center; align-items:center; position:relative; }
+        .hero-card { background:var(--white); border-radius:var(--radius); padding:32px 28px; box-shadow:var(--shadow); width:100%; max-width:420px; border:1px solid rgba(0,0,0,0.04); transition:var(--transition); backdrop-filter:blur(4px); background:rgba(255,255,255,0.9); }
+        .hero-card:hover { transform:translateY(-8px); box-shadow:var(--shadow-hover); }
+        .hero-card .store-badge { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+        .hero-card .store-badge span { font-size:0.75rem; font-weight:600; color:var(--dark-text); background:var(--light-blue-bg); padding:4px 12px; border-radius:30px; }
+        .hero-card .store-badge .open { background:#e8f5e9; color:#2e7d32; }
+        .hero-card .store-item { display:flex; align-items:center; gap:16px; padding:14px 0; border-bottom:1px solid #f0f0f0; }
+        .hero-card .store-item:last-child { border-bottom:none; }
+        .hero-card .store-icon { width:48px; height:48px; border-radius:var(--radius-sm); background:var(--light-blue-bg); display:flex; align-items:center; justify-content:center; font-size:1.4rem; color:var(--primary-blue); flex-shrink:0; }
+        .hero-card .store-info h4 { font-size:0.95rem; font-weight:700; }
+        .hero-card .store-info p { font-size:0.8rem; color:var(--dark-text); opacity:0.6; margin:0; }
+        .hero-card .store-meta { margin-left:auto; text-align:right; font-size:0.75rem; }
+        .hero-card .store-meta .rating { color:var(--primary-orange); font-weight:700; }
+        .hero-card .store-meta .time { color:var(--dark-text); opacity:0.5; font-size:0.7rem; }
+        .hero-card .order-placed { margin-top:16px; padding:14px 18px; background:var(--light-blue-bg); border-radius:var(--radius-sm); display:flex; align-items:center; gap:12px; font-weight:700; color:var(--primary-blue); font-size:0.95rem; }
+        .hero-card .order-placed i { font-size:1.2rem; color:var(--primary-orange); }
+
+        .float-badge { position:absolute; background:var(--white); padding:10px 20px; border-radius:50px; box-shadow:var(--shadow); font-size:0.85rem; font-weight:700; display:flex; align-items:center; gap:10px; animation:float 4s ease-in-out infinite; pointer-events:none; backdrop-filter:blur(4px); }
+        .float-badge-1 { top:-5px; right:-15px; color:var(--primary-blue); border:1px solid rgba(0,56,184,0.15); animation-delay:0s; }
+        .float-badge-2 { bottom:50px; left:-25px; color:var(--primary-orange); border:1px solid rgba(240,96,0,0.15); animation-delay:1.5s; }
+        @keyframes float { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
+
+        /* ----- SECTION TITLES (unchanged) ----- */
+        .section-title { text-align:center; margin-bottom:56px; }
+        .section-title .label { display:inline-block; font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--primary-blue); background:var(--light-blue-bg); padding:6px 20px; border-radius:30px; margin-bottom:12px; }
+        .section-title h2 { font-size:2.8rem; font-weight:800; letter-spacing:-1px; line-height:1.2; }
+        .section-title h2 .blue { color:var(--primary-blue); }
+        .section-title h2 .orange { color:var(--primary-orange); }
+        .section-title p { color:var(--dark-text); max-width:560px; margin:12px auto 0; font-size:1.1rem; opacity:0.7; }
+
+        /* ----- FEATURE CARDS & STATS (unchanged) ----- */
+        .feature-grid {
+            display:grid;
+            grid-template-columns:repeat(3, 1fr);
+            gap:32px;
+            margin-top:48px;
+        }
+        .feature-card {
+            background:var(--white);
+            border-radius:var(--radius);
+            padding:36px 28px;
+            box-shadow:var(--shadow);
+            transition:var(--transition);
+            border:1px solid rgba(0,0,0,0.04);
+            text-align:center;
+        }
+        .feature-card:hover {
+            transform:translateY(-8px);
+            box-shadow:var(--shadow-hover);
+            border-color:transparent;
+        }
+        .feature-card .icon-wrap {
+            width:72px;
+            height:72px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin:0 auto 16px;
+            font-size:2rem;
+        }
+        .feature-card .icon-wrap.blue { background:var(--light-blue-bg); color:var(--primary-blue); }
+        .feature-card .icon-wrap.orange { background:var(--light-orange-bg); color:var(--primary-orange); }
+        .feature-card .icon-wrap.purple { background:#f0ecff; color:#5e3c9b; }
+        .feature-card h3 { font-size:1.3rem; font-weight:700; margin-bottom:8px; color:var(--dark-text); }
+        .feature-card p { color:var(--dark-text); opacity:0.7; font-size:0.95rem; line-height:1.6; }
+
+        .stats-grid {
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:32px;
+            margin-top:64px;
+        }
+        .stat-card {
+            text-align:center; padding:32px 20px; border-radius:var(--radius);
+            background:var(--white); border:1px solid #f0f0f0;
+            transition:var(--transition); position:relative; overflow:hidden;
+        }
+        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, var(--primary-blue), var(--bright-orange)); opacity:0; transition:var(--transition); }
+        .stat-card:hover { transform:translateY(-8px); box-shadow:var(--shadow-hover); border-color:transparent; }
+        .stat-card:hover::before { opacity:1; }
+        .stat-card .icon { font-size:2.8rem; margin-bottom:12px; display:inline-block; }
+        .stat-card .icon.blue { color:var(--primary-blue); }
+        .stat-card .icon.orange { color:var(--primary-orange); }
+        .stat-card .number { font-size:3rem; font-weight:900; letter-spacing:-1px; line-height:1; }
+        .stat-card .number .blue { color:var(--primary-blue); }
+        .stat-card .number .orange { color:var(--primary-orange); }
+        .stat-card .label { font-size:0.95rem; color:var(--dark-text); margin-top:6px; font-weight:600; opacity:0.7; }
+
+        .feature-divider {
+            width:80px;
+            height:3px;
+            background:linear-gradient(90deg, var(--primary-blue), var(--bright-orange));
+            margin:56px auto 40px;
+            border-radius:2px;
+        }
+
+        /* ----- OTHER SECTIONS (unchanged) ----- */
+        .how-it-works { padding:80px 0; background:var(--light-blue-bg); }
+        .steps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
+        .step-card { background:var(--white); padding:40px 28px; border-radius:var(--radius); box-shadow:var(--shadow); transition:var(--transition); border:1px solid rgba(0,0,0,0.03); text-align:center; }
+        .step-card:hover { transform:translateY(-10px); box-shadow:var(--shadow-hover); }
+        .step-card .step-number { width:56px; height:56px; border-radius:50%; background:var(--light-blue-bg); color:var(--primary-blue); font-weight:900; font-size:1.4rem; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; }
+        .step-card .step-icon { font-size:2.6rem; margin-bottom:12px; display:block; color:var(--primary-blue); }
+        .step-card h4 { font-size:1.3rem; font-weight:700; margin-bottom:8px; color:var(--dark-text); }
+        .step-card p { color:var(--dark-text); font-size:0.95rem; line-height:1.6; opacity:0.7; }
+        .step-card .role-tag { display:inline-block; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:4px 16px; border-radius:30px; margin-bottom:12px; }
+        .step-card .role-tag.customer { background:var(--light-blue-bg); color:var(--primary-blue); }
+        .step-card .role-tag.seller { background:var(--light-orange-bg); color:var(--primary-orange); }
+        .step-card .role-tag.delivery { background:#e8f0fe; color:#1a56db; }
+
+        .role-tabs { display:flex; justify-content:center; gap:12px; margin-bottom:40px; flex-wrap:wrap; }
+        .role-tab { padding:12px 32px; border-radius:50px; font-weight:700; font-size:0.95rem; border:2px solid #e5e7eb; background:var(--white); cursor:pointer; transition:var(--transition); color:var(--dark-text); }
+        .role-tab:hover { border-color:var(--primary-blue); color:var(--primary-blue); }
+        .role-tab.active { border-color:var(--primary-blue); background:var(--primary-blue); color:var(--white); }
+        .role-tab.active.orange { border-color:var(--primary-orange); background:var(--primary-orange); color:var(--white); }
+
+        .for-everyone { padding:80px 0; background:var(--white); }
+        .role-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
+        .role-card { padding:36px 28px; border-radius:var(--radius); border:1px solid #f0f0f0; transition:var(--transition); background:var(--white); }
+        .role-card:hover { transform:translateY(-8px); box-shadow:var(--shadow-hover); border-color:transparent; }
+        .role-card .role-header { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+        .role-card .role-header .avatar { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem; flex-shrink:0; }
+        .role-card .role-header .avatar.blue { background:var(--light-blue-bg); color:var(--primary-blue); }
+        .role-card .role-header .avatar.orange { background:var(--light-orange-bg); color:var(--primary-orange); }
+        .role-card .role-header .avatar.purple { background:#f0ecff; color:#5e3c9b; }
+        .role-card .role-header h3 { font-size:1.2rem; font-weight:700; }
+        .role-card .role-header h3 .blue { color:var(--primary-blue); }
+        .role-card .role-header h3 .orange { color:var(--primary-orange); }
+        .role-card .role-header h3 .purple { color:#5e3c9b; }
+        .role-card ul { list-style:none; margin-top:8px; }
+        .role-card ul li { padding:10px 0; display:flex; align-items:center; gap:12px; font-size:0.92rem; color:var(--dark-text); border-bottom:1px solid #f5f5f5; }
+        .role-card ul li:last-child { border-bottom:none; }
+        .role-card ul li i { color:var(--primary-blue); font-size:0.9rem; width:20px; text-align:center; }
+        .role-card ul li i.orange { color:var(--primary-orange); }
+
+        .stores-section { padding:80px 0; background:var(--light-blue-bg); }
+        .stores-filter { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:36px; }
+        .stores-filter button { padding:10px 28px; border-radius:50px; border:1px solid #e5e7eb; background:var(--white); font-weight:600; font-size:0.9rem; cursor:pointer; transition:var(--transition); color:var(--dark-text); }
+        .stores-filter button:hover, .stores-filter button.active { border-color:var(--primary-blue); background:var(--primary-blue); color:var(--white); }
+        .stores-filter button.active.orange { border-color:var(--primary-orange); background:var(--primary-orange); }
+        .stores-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:24px; }
+        .store-card { background:var(--white); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); transition:var(--transition); border:1px solid rgba(0,0,0,0.03); }
+        .store-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-hover); }
+        .store-card .store-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+        .store-card .store-top .icon-box { width:48px; height:48px; border-radius:var(--radius-sm); background:var(--light-blue-bg); display:flex; align-items:center; justify-content:center; font-size:1.4rem; color:var(--primary-blue); }
+        .store-card .store-top .badge-open { font-size:0.65rem; font-weight:700; text-transform:uppercase; padding:3px 12px; border-radius:30px; background:#e8f5e9; color:#2e7d32; }
+        .store-card h4 { font-size:1rem; font-weight:700; margin-bottom:2px; color:var(--dark-text); }
+        .store-card .store-category { font-size:0.8rem; color:var(--dark-text); opacity:0.6; }
+        .store-card .store-meta { display:flex; align-items:center; gap:16px; margin-top:12px; font-size:0.8rem; color:var(--dark-text); flex-wrap:wrap; opacity:0.7; }
+        .store-card .store-meta .rating { color:var(--primary-orange); font-weight:700; }
+        .store-card .store-meta i { margin-right:4px; }
+
+        .contact-section { padding:80px 0; background:var(--white); }
+        .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
+        .contact-info h2 { font-size:2.4rem; font-weight:800; letter-spacing:-1px; line-height:1.2; margin-bottom:16px; }
+        .contact-info h2 .blue { color:var(--primary-blue); }
+        .contact-info h2 .orange { color:var(--primary-orange); }
+        .contact-info p { color:var(--dark-text); font-size:1.05rem; margin-bottom:32px; opacity:0.7; }
+        .contact-item { display:flex; align-items:center; gap:16px; padding:12px 0; border-bottom:1px solid #f0f0f0; }
+        .contact-item:last-child { border-bottom:none; }
+        .contact-item .icon-circle { width:44px; height:44px; border-radius:50%; background:var(--light-blue-bg); color:var(--primary-blue); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+        .contact-item .icon-circle.orange { background:var(--light-orange-bg); color:var(--primary-orange); }
+        .contact-item .text { font-weight:600; }
+        .contact-item .text span { display:block; font-weight:400; color:var(--dark-text); opacity:0.6; font-size:0.9rem; }
+        .contact-form { background:var(--light-blue-bg); padding:40px 36px; border-radius:var(--radius); border:1px solid #f0f0f0; }
+        .contact-form h4 { font-size:1.2rem; font-weight:700; margin-bottom:4px; color:var(--dark-text); }
+        .contact-form p { color:var(--dark-text); font-size:0.9rem; margin-bottom:20px; opacity:0.7; }
+        .contact-form input, .contact-form textarea { width:100%; padding:14px 18px; border:1px solid #e5e7eb; border-radius:var(--radius-sm); font-family:inherit; font-size:0.95rem; transition:var(--transition); background:var(--white); margin-bottom:14px; }
+        .contact-form input:focus, .contact-form textarea:focus { outline:none; border-color:var(--primary-blue); box-shadow:0 0 0 4px rgba(0,56,184,0.1); }
+        .contact-form textarea { min-height:120px; resize:vertical; }
+
+        /* ----- FOOTER (unchanged – already dark blue) ----- */
+        .footer {
+            background:var(--primary-dark-blue);
+            color:rgba(255,255,255,0.8);
+            padding:60px 0 30px;
+        }
+        .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; margin-bottom:40px; }
+        .footer-brand .logo { font-size:1.8rem; margin-bottom:12px; }
+        .footer-brand .logo .quick { color:var(--sky-blue); }
+        .footer-brand .logo .lick { color:var(--primary-orange); }
+        .footer-brand p { font-size:0.9rem; max-width:300px; line-height:1.7; color:rgba(255,255,255,0.6); }
+        .footer-col h5 { color:var(--white); font-weight:700; font-size:0.95rem; margin-bottom:16px; }
+        .footer-col ul { list-style:none; }
+        .footer-col ul li { margin-bottom:10px; }
+        .footer-col ul a { color:rgba(255,255,255,0.6); font-size:0.9rem; transition:var(--transition); }
+        .footer-col ul a:hover { color:var(--sky-blue); }
+        .footer-bottom {
+            border-top:1px solid rgba(255,255,255,0.06);
+            padding-top:24px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:8px 20px;
+            font-size:0.85rem;
+            color:rgba(255,255,255,0.4);
+        }
+        .footer-bottom .heart { color:#FF6B6B; }
+
+        .app-badges { display:flex; flex-wrap:wrap; gap:12px; margin-top:8px; }
+        .app-badge { display:flex; align-items:center; gap:10px; background:var(--dark-text); color:var(--white); padding:10px 20px; border-radius:12px; transition:var(--transition); border:1px solid rgba(255,255,255,0.1); }
+        .app-badge:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(0,0,0,0.15); }
+        .app-badge .icon { font-size:1.6rem; }
+        .app-badge .text { line-height:1.2; }
+        .app-badge .text small { display:block; font-size:0.6rem; font-weight:400; opacity:0.7; }
+        .app-badge .text strong { font-size:0.9rem; }
+        .app-badge.light { background:var(--white); color:var(--dark-text); border-color:#e5e7eb; }
+        .app-badge.light:hover { border-color:var(--primary-blue); }
+        .rating-badge { display:inline-flex; align-items:center; gap:6px; background:var(--light-orange-bg); color:var(--primary-orange); padding:6px 16px; border-radius:30px; font-weight:700; font-size:0.85rem; }
+        .rating-badge i { color:var(--primary-orange); }
+
+        /* ----- RESPONSIVE (unchanged) ----- */
+        @media (max-width:1024px) {
+            .hero-grid { grid-template-columns:1fr; text-align:center; }
+            .hero-content p { margin-left:auto; margin-right:auto; }
+            .hero-buttons { justify-content:center; }
+            .hero-visual { order:-1; }
+            .hero-card { max-width:100%; }
+            .hero-content h1 { font-size:3.2rem; }
+            .feature-grid { grid-template-columns:1fr 1fr; }
+            .stats-grid { grid-template-columns:repeat(2,1fr); }
+            .steps-grid { grid-template-columns:1fr 1fr; }
+            .role-grid { grid-template-columns:1fr 1fr; }
+            .footer-grid { grid-template-columns:1fr 1fr; }
+            .contact-grid { grid-template-columns:1fr; }
+            .float-badge { display:none; }
+        }
+        @media (max-width:768px) {
+            .nav-links { display:none; flex-direction:column; position:absolute; top:72px; left:0; right:0; background:var(--primary-dark-blue); padding:24px; gap:16px; box-shadow:0 20px 40px rgba(0,0,0,0.3); border-top:1px solid rgba(255,255,255,0.08); }
+            .nav-links.open { display:flex; }
+            .mobile-toggle { display:block; }
+            .nav-actions .lang-toggle { display:flex; }
+            .hero-content h1 { font-size:2.8rem; }
+            .section-title h2 { font-size:2.2rem; }
+            .feature-grid { grid-template-columns:1fr; }
+            .stats-grid { grid-template-columns:1fr 1fr; gap:16px; }
+            .steps-grid { grid-template-columns:1fr; }
+            .role-grid { grid-template-columns:1fr; }
+            .footer-grid { grid-template-columns:1fr; gap:28px; }
+            .footer-bottom { flex-direction:column; text-align:center; }
+            .stores-grid { grid-template-columns:1fr 1fr; }
+            .contact-form { padding:28px 20px; }
+            .stat-card .number { font-size:2.4rem; }
+        }
+        @media (max-width:480px) {
+            .stores-grid { grid-template-columns:1fr; }
+            .hero-content h1 { font-size:2.2rem; }
+            .hero-buttons .btn-primary, .hero-buttons .btn-secondary { width:100%; justify-content:center; }
+            .stats-grid { grid-template-columns:1fr 1fr; gap:12px; }
+            .stat-card { padding:20px 12px; }
+            .stat-card .number { font-size:2rem; }
+            .role-tabs { gap:8px; }
+            .role-tab { padding:8px 18px; font-size:0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- React & ReactDOM from CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // ============================================================
+        // TRANSLATIONS (unchanged)
+        // ============================================================
+        const translations = {
+            en: {
+                navFeatures: 'Features',
+                navHowItWorks: 'How It Works',
+                navForEveryone: 'For Everyone',
+                navContact: 'Contact',
+                navGetApp: 'Get the App',
+                langLabel: 'EN',
+                langFlag: '🇮🇳',
+                heroBadge: 'Powered by local sellers',
+                heroTitle1: 'Your Daily',
+                heroTitle2: 'Essentials',
+                heroTitle3: 'Delivered!',
+                heroDesc: 'Shop from local stores near you and get everything delivered to your doorstep in minutes. Groceries, essentials, and more — powered by your neighborhood sellers.',
+                heroBtnExplore: 'Explore Stores',
+                heroBtnHowItWorks: 'How It Works',
+                appStoreSmall: 'Download on the',
+                appStoreStrong: 'App Store',
+                googlePlaySmall: 'Get it on',
+                googlePlayStrong: 'Google Play',
+                rating: '4.9 Rating',
+                orderPlaced: 'Order Placed! 🎉',
+                featuresLabel: 'FEATURES',
+                featuresTitle: 'Everything you need, right in your pocket',
+                featuresDesc: 'From discovering local stores to tracking your delivery in real-time — Quicklick brings the entire hyperlocal experience to your fingertips.',
+                featureDiscoverTitle: 'Discover Local Stores',
+                featureDiscoverDesc: 'Find stores near you with GPS-powered discovery. Browse 27+ categories from groceries to electronics — all in your neighborhood.',
+                featureDeliveryTitle: 'Lightning Fast Delivery',
+                featureDeliveryDesc: 'Get your orders delivered in minutes with real-time GPS tracking. Watch your delivery partner navigate to your doorstep live.',
+                featureShoppingTitle: 'Easy Shopping',
+                featureShoppingDesc: 'Browse product catalogs, compare variants, add to cart, and checkout seamlessly. Shopping local has never been this convenient.',
+                featureSellerTitle: 'Seller Dashboard',
+                featureSellerDesc: 'Powerful tools for store owners — manage inventory, track orders in real-time, configure delivery zones, and grow your business.',
+                featureTrackingTitle: 'Live Order Tracking',
+                featureTrackingDesc: 'Track your order from confirmation to delivery with real-time WebSocket updates. See your delivery partner\'s live location on the map.',
+                featureSecureTitle: 'Secure & Private',
+                featureSecureDesc: 'OTP-based authentication, JWT token security, and encrypted data storage keep your account and transactions safe.',
+                statStoreCategories: 'Store Categories',
+                statUserRoles: 'User Roles',
+                statRealTime: 'Real-time Tracking',
+                statAvailable: 'Available',
+                howLabel: 'How It Works',
+                howTitle: 'Simple as 1, 2, 3',
+                howDesc: "Whether you're shopping, selling, or delivering — getting started is effortless.",
+                roleCustomers: 'Customers',
+                roleSellers: 'Sellers',
+                roleDelivery: 'Delivery Partners',
+                stepCustomer1Title: 'Discover Stores',
+                stepCustomer1Desc: 'Open the app and browse stores near you. See ratings, delivery times, and product catalogs.',
+                stepCustomer2Title: 'Shop & Checkout',
+                stepCustomer2Desc: 'Add products to your cart, select variants, choose your delivery address, and place your order.',
+                stepCustomer3Title: 'Track & Receive',
+                stepCustomer3Desc: 'Watch your order in real-time on the map. Get notified at every step until delivery.',
+                stepSeller1Title: 'Create Store',
+                stepSeller1Desc: 'Use the 5-step wizard to set up your store. Add products, images, and set your store hours.',
+                stepSeller2Title: 'Manage Orders',
+                stepSeller2Desc: 'Get real-time order notifications. Manage inventory, track deliveries, and update product variants.',
+                stepSeller3Title: 'Grow Business',
+                stepSeller3Desc: 'Access analytics, configure delivery zones, manage delivery partners, and track performance.',
+                stepDelivery1Title: 'Go Online',
+                stepDelivery1Desc: 'Toggle your availability on/off. Get matched with orders in your area based on your location.',
+                stepDelivery2Title: 'Accept & Navigate',
+                stepDelivery2Desc: 'Accept delivery requests, view pickup and drop-off locations, and navigate with GPS integration.',
+                stepDelivery3Title: 'Earn & Track',
+                stepDelivery3Desc: 'Complete deliveries and track your earnings. View performance analytics and delivery history.',
+                forEveryoneLabel: 'For Everyone',
+                forEveryoneTitle: 'One app, three experiences',
+                forEveryoneDesc: 'Quicklick seamlessly connects three sides of local commerce in a single, unified platform.',
+                roleCustomer: 'Customers',
+                roleCustomerTag: 'Shop smarter, shop local',
+                roleSeller: 'Sellers',
+                roleSellerTag: 'Grow your business digitally',
+                roleDeliveryPartner: 'Delivery Partners',
+                roleDeliveryTag: 'Earn on your own schedule',
+                customerFeat1: 'Discover stores within walking distance',
+                customerFeat2: 'Real-time delivery tracking on map',
+                customerFeat3: '27+ categories to choose from',
+                customerFeat4: 'Save favorite stores & products',
+                customerFeat5: 'Manage multiple delivery addresses',
+                customerFeat6: 'Order history & reordering',
+                sellerFeat1: '5-step store creation wizard',
+                sellerFeat2: 'Real-time order dashboard',
+                sellerFeat3: 'Product variants & image management',
+                sellerFeat4: 'Configurable store hours & zones',
+                sellerFeat5: 'Delivery partner management',
+                sellerFeat6: 'Inventory tracking & analytics',
+                deliveryFeat1: 'Flexible online/offline toggle',
+                deliveryFeat2: 'Real-time delivery notifications',
+                deliveryFeat3: 'Smart queue management',
+                deliveryFeat4: 'GPS navigation integration',
+                deliveryFeat5: 'Earnings tracking & history',
+                deliveryFeat6: 'Performance analytics',
+                storesLabel: 'Local Stores',
+                storesTitle: 'Discover neighborhood shops',
+                storesDesc: 'Find the best stores near you, all in one place.',
+                filterAll: 'All',
+                filterOpen: '🟢 Open',
+                filterNear: '📍 Near',
+                filterFast: '⚡ Fast',
+                badgeOpen: '● Open',
+                badgeClosed: '● Closed',
+                contactLabel: 'Contact',
+                contactTitle: 'Get in touch',
+                contactDesc: "Have questions? We'd love to hear from you.",
+                contactInfoTitle1: "We're here to help you",
+                contactInfoTitle2: 'get started',
+                contactInfoDesc: "Whether you're a customer, seller, or delivery partner — our team is here to help you get started.",
+                contactEmail: 'Email us',
+                contactWebsite: 'Website',
+                contactLocation: 'Location',
+                contactLocationVal: 'Your Neighborhood, Delivered',
+                contactFormTitle: 'Send us a message',
+                contactFormDesc: "We'll get back to you within 24 hours.",
+                contactNamePlaceholder: 'Your Name',
+                contactEmailPlaceholder: 'Your Email',
+                contactMsgPlaceholder: 'Tell us how we can help...',
+                contactBtnSend: 'Send Message',
+                footerTagline: 'Your neighborhood, delivered. Connecting local stores, customers, and delivery partners to build stronger communities.',
+                footerProduct: 'Product',
+                footerCompany: 'Company',
+                footerLegal: 'Legal',
+                footerSupport: 'Support',
+                footerBlog: 'Blog',
+                footerPrivacy: 'Privacy Policy',
+                footerTerms: 'Terms of Service',
+                footerCookie: 'Cookie Policy',
+                footerCopyright: '© 2026 Quicklick. All rights reserved.',
+                footerPoweredBy: 'Powered by Prajnan Software Pvt. Ltd',
+                footerMade: 'Made with ♥ in India',
+            },
+            hi: {
+                // ... (all Hindi translations remain as before)
+                navFeatures: 'विशेषताएँ',
+                navHowItWorks: 'यह कैसे काम करता है',
+                navForEveryone: 'सभी के लिए',
+                navContact: 'संपर्क करें',
+                navGetApp: 'ऐप प्राप्त करें',
+                langLabel: 'हिंदी',
+                langFlag: '🇬🇧',
+                heroBadge: 'स्थानीय विक्रेताओं द्वारा संचालित',
+                heroTitle1: 'आपकी दैनिक',
+                heroTitle2: 'आवश्यकताएँ',
+                heroTitle3: 'आपके दरवाज़ तक!',
+                heroDesc: 'अपने आस-पास की दुकानों से खरीदारी करें और सब कुछ मिनटों में अपने दरवाज़े पर पाएँ। किराना, ज़रूरी सामान, और बहुत कुछ — आपके पड़ोस के विक्रेताओं द्वारा संचालित।',
+                heroBtnExplore: 'दुकानें खोजें',
+                heroBtnHowItWorks: 'यह कैसे काम करता है',
+                appStoreSmall: 'App Store पर डाउनलोड करें',
+                appStoreStrong: 'App Store',
+                googlePlaySmall: 'Google Play पर प्राप्त करें',
+                googlePlayStrong: 'Google Play',
+                rating: '4.9 रेटिंग',
+                orderPlaced: 'ऑर्डर हो गया! 🎉',
+                featuresLabel: 'विशेषताएँ',
+                featuresTitle: 'आपको जो चाहिए, आपकी जेब में',
+                featuresDesc: 'स्थानीय दुकानों की खोज से लेकर आपके डिलीवरी को रीयल-टाइम में ट्रैक करने तक — Quicklick आपके हाइपरलोकल अनुभव को आपकी उंगलियों पर लाता है।',
+                featureDiscoverTitle: 'स्थानीय दुकानें खोजें',
+                featureDiscoverDesc: 'GPS-संचालित खोज के साथ अपने आस-पास की दुकानें खोजें। किराना से लेकर इलेक्ट्रॉनिक्स तक 27+ श्रेणियाँ ब्राउज़ करें — सभी आपके पड़ोस में।',
+                featureDeliveryTitle: 'तेज़ डिलीवरी',
+                featureDeliveryDesc: 'अपने ऑर्डर मिनटों में रीयल-टाइम GPS ट्रैकिंग के साथ प्राप्त करें। अपने डिलीवरी पार्टनर को लाइव आपके दरवाज़े तक नेविगेट करते हुए देखें।',
+                featureShoppingTitle: 'आसान खरीदारी',
+                featureShoppingDesc: 'उत्पाद सूची ब्राउज़ करें, वैरिएंट तुलना करें, कार्ट में जोड़ें, और आसानी से चेकआउट करें। स्थानीय खरीदारी इतनी सुविधाजनक कभी नहीं रही।',
+                featureSellerTitle: 'विक्रेता डैशबोर्ड',
+                featureSellerDesc: 'स्टोर मालिकों के लिए शक्तिशाली उपकरण — इन्वेंटरी प्रबंधित करें, रीयल-टाइम में ऑर्डर ट्रैक करें, डिलीवरी ज़ोन कॉन्फ़िगर करें, और अपना व्यवसाय बढ़ाएँ।',
+                featureTrackingTitle: 'लाइव ऑर्डर ट्रैकिंग',
+                featureTrackingDesc: 'रीयल-टाइम WebSocket अपडेट के साथ पुष्टिकरण से डिलीवरी तक अपने ऑर्डर को ट्रैक करें। मानचित्र पर अपने डिलीवरी पार्टनर की लाइव लोकेशन देखें।',
+                featureSecureTitle: 'सुरक्षित और निजी',
+                featureSecureDesc: 'OTP-आधारित प्रमाणीकरण, JWT टोकन सुरक्षा, और एन्क्रिप्टेड डेटा स्टोरेज आपके खाते और लेन-देन को सुरक्षित रखते हैं।',
+                statStoreCategories: 'दुकान श्रेणियाँ',
+                statUserRoles: 'उपयोगकर्ता भूमिकाएँ',
+                statRealTime: 'रीयल-टाइम ट्रैकिंग',
+                statAvailable: 'उपलब्ध',
+                howLabel: 'यह कैसे काम करता है',
+                howTitle: '1, 2, 3 जितना आसान',
+                howDesc: 'चाहे आप खरीदारी कर रहे हों, बेच रहे हों, या डिलीवरी कर रहे हों — शुरू करना बहुत आसान है।',
+                roleCustomers: 'ग्राहक',
+                roleSellers: 'विक्रेता',
+                roleDelivery: 'डिलीवरी पार्टनर',
+                stepCustomer1Title: 'दुकानें खोजें',
+                stepCustomer1Desc: 'ऐप खोलें और अपने आस-पास की दुकानें ब्राउज़ करें। रेटिंग, डिलीवरी समय और उत्पाद सूची देखें।',
+                stepCustomer2Title: 'खरीदारी करें और चेकआउट करें',
+                stepCustomer2Desc: 'अपनी कार्ट में उत्पाद जोड़ें, वैरिएंट चुनें, डिलीवरी पता चुनें और ऑर्डर करें।',
+                stepCustomer3Title: 'ट्रैक करें और प्राप्त करें',
+                stepCustomer3Desc: 'अपने ऑर्डर को मानचित्र पर रीयल-टाइम में देखें। डिलीवरी तक हर चरण पर सूचना प्राप्त करें।',
+                stepSeller1Title: 'दुकान बनाएँ',
+                stepSeller1Desc: 'अपनी दुकान स्थापित करने के लिए 5-चरणीय विज़ार्ड का उपयोग करें। उत्पाद, छवियाँ जोड़ें और दुकान के घंटे सेट करें।',
+                stepSeller2Title: 'ऑर्डर प्रबंधित करें',
+                stepSeller2Desc: 'रीयल-टाइम ऑर्डर सूचनाएँ प्राप्त करें। इन्वेंटरी प्रबंधित करें, डिलीवरी ट्रैक करें और उत्पाद वैरिएंट अपडेट करें।',
+                stepSeller3Title: 'व्यवसाय बढ़ाएँ',
+                stepSeller3Desc: 'एनालिटिक्स तक पहुँचें, डिलीवरी ज़ोन कॉन्फ़िगर करें, डिलीवरी पार्टनर प्रबंधित करें और प्रदर्शन ट्रैक करें।',
+                stepDelivery1Title: 'ऑनलाइन जाएँ',
+                stepDelivery1Desc: 'अपनी उपलब्धता चालू/बंद करें। अपने स्थान के आधार पर अपने क्षेत्र में ऑर्डर प्राप्त करें।',
+                stepDelivery2Title: 'स्वीकार करें और नेविगेट करें',
+                stepDelivery2Desc: 'डिलीवरी अनुरोध स्वीकार करें, पिकअप और ड्रॉप-ऑफ स्थान देखें, और GPS एकीकरण के साथ नेविगेट करें।',
+                stepDelivery3Title: 'कमाएँ और ट्रैक करें',
+                stepDelivery3Desc: 'डिलीवरी पूरी करें और अपनी कमाई ट्रैक करें। प्रदर्शन एनालिटिक्स और डिलीवरी इतिहास देखें।',
+                forEveryoneLabel: 'सभी के लिए',
+                forEveryoneTitle: 'एक ऐप, तीन अनुभव',
+                forEveryoneDesc: 'Quicklick स्थानीय वाणिज्य के तीन पहलुओं को एक ही मंच पर जोड़ता है।',
+                roleCustomer: 'ग्राहक',
+                roleCustomerTag: 'स्मार्ट खरीदारी, स्थानीय खरीदारी',
+                roleSeller: 'विक्रेता',
+                roleSellerTag: 'अपने व्यवसाय को डिजिटल रूप से बढ़ाएँ',
+                roleDeliveryPartner: 'डिलीवरी पार्टनर',
+                roleDeliveryTag: 'अपने शेड्यूल पर कमाएँ',
+                customerFeat1: 'पैदल दूरी के भीतर दुकानें खोजें',
+                customerFeat2: 'मानचित्र पर रीयल-टाइम डिलीवरी ट्रैकिंग',
+                customerFeat3: '27+ श्रेणियाँ चुनने के लिए',
+                customerFeat4: 'पसंदीदा दुकानें और उत्पाद सहेजें',
+                customerFeat5: 'एकाधिक डिलीवरी पते प्रबंधित करें',
+                customerFeat6: 'ऑर्डर इतिहास और पुनः ऑर्डर',
+                sellerFeat1: '5-चरणीय दुकान निर्माण विज़ार्ड',
+                sellerFeat2: 'रीयल-टाइम ऑर्डर डैशबोर्ड',
+                sellerFeat3: 'उत्पाद वैरिएंट और छवि प्रबंधन',
+                sellerFeat4: 'कॉन्फ़िगर करने योग्य दुकान घंटे और ज़ोन',
+                sellerFeat5: 'डिलीवरी पार्टनर प्रबंधन',
+                sellerFeat6: 'इन्वेंटरी ट्रैकिंग और एनालिटिक्स',
+                deliveryFeat1: 'लचीला ऑनलाइन/ऑफलाइन टॉगल',
+                deliveryFeat2: 'रीयल-टाइम डिलीवरी सूचनाएँ',
+                deliveryFeat3: 'स्मार्ट क्यू प्रबंधन',
+                deliveryFeat4: 'GPS नेविगेशन एकीकरण',
+                deliveryFeat5: 'कमाई ट्रैकिंग और इतिहास',
+                deliveryFeat6: 'प्रदर्शन एनालिटिक्स',
+                storesLabel: 'स्थानीय दुकानें',
+                storesTitle: 'पड़ोस की दुकानें खोजें',
+                storesDesc: 'अपने आस-पास की सबसे अच्छी दुकानें ढूंढें, सभी एक ही जगह।',
+                filterAll: 'सभी',
+                filterOpen: '🟢 खुला',
+                filterNear: '📍 निकट',
+                filterFast: '⚡ तेज़',
+                badgeOpen: '● खुला',
+                badgeClosed: '● बंद',
+                contactLabel: 'संपर्क करें',
+                contactTitle: 'संपर्क में रहें',
+                contactDesc: 'कोई सवाल? हम आपकी बात सुनना पसंद करेंगे।',
+                contactInfoTitle1: 'हम आपकी मदद के लिए यहाँ हैं',
+                contactInfoTitle2: 'शुरू करें',
+                contactInfoDesc: 'चाहे आप ग्राहक हों, विक्रेता हों, या डिलीवरी पार्टनर — हमारी टीम आपको शुरू करने में मदद के लिए यहाँ है।',
+                contactEmail: 'हमें ईमेल करें',
+                contactWebsite: 'वेबसाइट',
+                contactLocation: 'स्थान',
+                contactLocationVal: 'आपका पड़ोस, आपके दरवाज़ पर',
+                contactFormTitle: 'हमें संदेश भेजें',
+                contactFormDesc: 'हम 24 घंटे के भीतर आपसे संपर्क करेंगे।',
+                contactNamePlaceholder: 'आपका नाम',
+                contactEmailPlaceholder: 'आपका ईमेल',
+                contactMsgPlaceholder: 'हमें बताएं कि हम कैसे मदद कर सकते हैं...',
+                contactBtnSend: 'संदेश भेजें',
+                footerTagline: 'आपका पड़ोस, आपके दरवाज़ पर। स्थानीय दुकानों, ग्राहकों और डिलीवरी पार्टनरों को जोड़कर मजबूत समुदाय बनाना।',
+                footerProduct: 'उत्पाद',
+                footerCompany: 'कंपनी',
+                footerLegal: 'कानूनी',
+                footerSupport: 'सहायता',
+                footerBlog: 'ब्लॉग',
+                footerPrivacy: 'गोपनीयता नीति',
+                footerTerms: 'सेवा की शर्तें',
+                footerCookie: 'कुकी नीति',
+                footerCopyright: '© 2026 Quicklick. सर्वाधिकार सुरक्षित।',
+                footerPoweredBy: 'प्रज्ञान सॉफ्टवेयर प्रा. लि. द्वारा संचालित',
+                footerMade: '♥ के साथ भारत में बनाया गया',
+            }
+        };
+
+        function t(lang, key) {
+            return translations[lang]?.[key] || key;
+        }
+
+        // ----- Logo (no dot) -----
+        function Logo() {
+            const [imgError, setImgError] = useState(false);
+            return (
+                <div className="logo">
+                    {!imgError ? (
+                        <img
+                            src="logo.png"
+                            alt="Quicklick"
+                            style={{ height: '40px', width: 'auto' }}
+                            onError={() => setImgError(true)}
+                        />
+                    ) : null}
+                    <span className="quick">Quick</span>
+                    <span className="lick">lick</span>
+                </div>
+            );
+        }
+
+        // ----- Header (only the component remains, styles updated) -----
+        function Header({ lang, setLang }) {
+            const [scrolled, setScrolled] = useState(false);
+            const [mobileOpen, setMobileOpen] = useState(false);
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 20);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+            const toggleLang = () => setLang(lang === 'en' ? 'hi' : 'en');
+            return (
+                <header className={`header ${scrolled ? 'scrolled' : ''}`}>
+                    <div className="container header-inner">
+                        <Logo />
+                        <ul className={`nav-links ${mobileOpen ? 'open' : ''}`}>
+                            <li><a href="#features">{t(lang, 'navFeatures')}</a></li>
+                            <li><a href="#how-it-works">{t(lang, 'navHowItWorks')}</a></li>
+                            <li><a href="#for-everyone">{t(lang, 'navForEveryone')}</a></li>
+                            <li><a href="#contact">{t(lang, 'navContact')}</a></li>
+                            <li><a href="#" className="btn-primary" style={{ padding: '8px 20px', fontSize: '0.85rem' }}><i className="fas fa-download"></i> {t(lang, 'navGetApp')}</a></li>
+                        </ul>
+                        <div className="nav-actions">
+                            <button className="lang-toggle" onClick={toggleLang}>
+                                <span className="flag">{t(lang, 'langFlag')}</span> {t(lang, 'langLabel')}
+                            </button>
+                            <button className="mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)}>
+                                <i className={`fas ${mobileOpen ? 'fa-times' : 'fa-bars'}`}></i>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+            );
+        }
+
+        // ----- Hero (unchanged) -----
+        function Hero({ lang }) {
+            return (
+                <section className="hero">
+                    <div className="container hero-grid">
+                        <div className="hero-content">
+                            <div className="hero-badge"><i className="fas fa-bolt"></i> {t(lang, 'heroBadge')}</div>
+                            <h1>
+                                {t(lang, 'heroTitle1')} <br />
+                                <span className="highlight-blue">{t(lang, 'heroTitle2')}</span>, <br />
+                                <span className="highlight-orange">{t(lang, 'heroTitle3')}</span>
+                            </h1>
+                            <p>{t(lang, 'heroDesc')}</p>
+                            <div className="hero-buttons">
+                                <a href="#" className="btn-primary"><i className="fas fa-store"></i> {t(lang, 'heroBtnExplore')}</a>
+                                <a href="#" className="btn-secondary"><i className="fas fa-play"></i> {t(lang, 'heroBtnHowItWorks')}</a>
+                            </div>
+                            <div className="app-badges" style={{ marginTop: '32px' }}>
+                                <div className="app-badge light"><div className="icon"><i className="fab fa-apple"></i></div><div className="text"><small>{t(lang, 'appStoreSmall')}</small><strong>{t(lang, 'appStoreStrong')}</strong></div></div>
+                                <div className="app-badge light"><div className="icon"><i className="fab fa-google-play"></i></div><div className="text"><small>{t(lang, 'googlePlaySmall')}</small><strong>{t(lang, 'googlePlayStrong')}</strong></div></div>
+                                <div className="rating-badge"><i className="fas fa-star"></i> {t(lang, 'rating')}</div>
+                            </div>
+                        </div>
+                        <div className="hero-visual">
+                            <div className="hero-card">
+                                <div className="store-badge"><span>📍 Sarangpur</span><span className="open">● 3 open</span></div>
+                                <div className="store-item"><div className="store-icon">✏️</div><div className="store-info"><h4>The Little Stationery</h4><p>Cards, Art & Crafts</p></div><div className="store-meta"><div className="rating">⭐ 5.0(1)</div><div className="time">0.7 km · 30-45 mins</div></div></div>
+                                <div className="store-item"><div className="store-icon" style={{ background: '#fff4ea', color: '#f06000' }}>🛒</div><div className="store-info"><h4>Fresh Mart Grocery</h4><p>Fruits, Vegetables & Dairy</p></div><div className="store-meta"><div className="rating">⭐ 4.8(23)</div><div className="time">1.2 km · 20-30 mins</div></div></div>
+                                <div className="store-item"><div className="store-icon" style={{ background: '#e8f0fe', color: '#5e3c9b' }}>💊</div><div className="store-info"><h4>HealthPlus Pharmacy</h4><p>Medicines & Wellness</p></div><div className="store-meta"><div className="rating">⭐ 4.9(12)</div><div className="time">0.5 km · 15-20 mins</div></div></div>
+                                <div className="order-placed"><i className="fas fa-check-circle"></i> {t(lang, 'orderPlaced')}</div>
+                            </div>
+                            <div className="float-badge float-badge-1"><i className="fas fa-bolt"></i> 27+ Categories</div>
+                            <div className="float-badge float-badge-2"><i className="fas fa-truck"></i> Real-time Tracking</div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // ----- Features (reordered: Row1, Row2, Stats) -----
+        function Features({ lang }) {
+            const primaryFeatures = [
+                { icon: 'fa-store', color: 'blue', titleKey: 'featureDiscoverTitle', descKey: 'featureDiscoverDesc' },
+                { icon: 'fa-truck-fast', color: 'orange', titleKey: 'featureDeliveryTitle', descKey: 'featureDeliveryDesc' },
+                { icon: 'fa-bag-shopping', color: 'blue', titleKey: 'featureShoppingTitle', descKey: 'featureShoppingDesc' },
+            ];
+            const advancedFeatures = [
+                { icon: 'fa-chart-line', color: 'orange', titleKey: 'featureSellerTitle', descKey: 'featureSellerDesc' },
+                { icon: 'fa-map-location-dot', color: 'blue', titleKey: 'featureTrackingTitle', descKey: 'featureTrackingDesc' },
+                { icon: 'fa-shield-halved', color: 'purple', titleKey: 'featureSecureTitle', descKey: 'featureSecureDesc' },
+            ];
+            const stats = [
+                { icon: 'fa-store', number: '27+', labelKey: 'statStoreCategories', color: 'blue' },
+                { icon: 'fa-users', number: '3', labelKey: 'statUserRoles', color: 'orange' },
+                { icon: 'fa-location-dot', number: '100%', labelKey: 'statRealTime', color: 'blue' },
+                { icon: 'fa-clock', number: '24/7', labelKey: 'statAvailable', color: 'orange' },
+            ];
+
+            return (
+                <section id="features" className="features-stats" style={{ paddingTop: '80px' }}>
+                    <div className="container">
+                        <div className="section-title">
+                            <span className="label"><i className="fas fa-star"></i> {t(lang, 'featuresLabel')}</span>
+                            <h2>{t(lang, 'featuresTitle')}</h2>
+                            <p>{t(lang, 'featuresDesc')}</p>
+                        </div>
+
+                        <div className="feature-grid">
+                            {primaryFeatures.map((f, i) => (
+                                <div className="feature-card" key={i}>
+                                    <div className={`icon-wrap ${f.color}`}>
+                                        <i className={`fas ${f.icon}`}></i>
+                                    </div>
+                                    <h3>{t(lang, f.titleKey)}</h3>
+                                    <p>{t(lang, f.descKey)}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="feature-divider"></div>
+
+                        <div className="feature-grid">
+                            {advancedFeatures.map((f, i) => (
+                                <div className="feature-card" key={i}>
+                                    <div className={`icon-wrap ${f.color}`}>
+                                        <i className={`fas ${f.icon}`}></i>
+                                    </div>
+                                    <h3>{t(lang, f.titleKey)}</h3>
+                                    <p>{t(lang, f.descKey)}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="stats-grid">
+                            {stats.map((s, i) => (
+                                <div className="stat-card" key={i}>
+                                    <div className={`icon ${s.color}`}>
+                                        <i className={`fas ${s.icon}`}></i>
+                                    </div>
+                                    <div className="number">
+                                        <span className={s.color}>{s.number}</span>
+                                    </div>
+                                    <div className="label">{t(lang, s.labelKey)}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // ----- Other components (HowItWorks, ForEveryone, Stores, Contact, Footer) unchanged -----
+        // (For brevity, I’ll keep them as in the previous version – they are identical)
+        function HowItWorks({ lang }) {
+            const [activeRole, setActiveRole] = useState('customer');
+            const roles = {
+                customer: {
+                    labelKey: 'roleCustomers',
+                    tag: 'customer',
+                    tagLabel: 'For Customers',
+                    steps: [
+                        { number: '01', icon: 'fa-store', titleKey: 'stepCustomer1Title', descKey: 'stepCustomer1Desc' },
+                        { number: '02', icon: 'fa-cart-shopping', titleKey: 'stepCustomer2Title', descKey: 'stepCustomer2Desc' },
+                        { number: '03', icon: 'fa-map-location-dot', titleKey: 'stepCustomer3Title', descKey: 'stepCustomer3Desc' },
+                    ]
+                },
+                seller: {
+                    labelKey: 'roleSellers',
+                    tag: 'seller',
+                    tagLabel: 'For Sellers',
+                    steps: [
+                        { number: '01', icon: 'fa-store', titleKey: 'stepSeller1Title', descKey: 'stepSeller1Desc' },
+                        { number: '02', icon: 'fa-clipboard-list', titleKey: 'stepSeller2Title', descKey: 'stepSeller2Desc' },
+                        { number: '03', icon: 'fa-chart-line', titleKey: 'stepSeller3Title', descKey: 'stepSeller3Desc' },
+                    ]
+                },
+                delivery: {
+                    labelKey: 'roleDelivery',
+                    tag: 'delivery',
+                    tagLabel: 'For Delivery Partners',
+                    steps: [
+                        { number: '01', icon: 'fa-toggle-on', titleKey: 'stepDelivery1Title', descKey: 'stepDelivery1Desc' },
+                        { number: '02', icon: 'fa-route', titleKey: 'stepDelivery2Title', descKey: 'stepDelivery2Desc' },
+                        { number: '03', icon: 'fa-coin', titleKey: 'stepDelivery3Title', descKey: 'stepDelivery3Desc' },
+                    ]
+                }
+            };
+            const current = roles[activeRole];
+            return (
+                <section id="how-it-works" className="how-it-works">
+                    <div className="container">
+                        <div className="section-title">
+                            <span className="label"><i className="fas fa-arrow-right"></i> {t(lang, 'howLabel')}</span>
+                            <h2>{t(lang, 'howTitle')}</h2>
+                            <p>{t(lang, 'howDesc')}</p>
+                        </div>
+                        <div className="role-tabs">
+                            {['customer', 'seller', 'delivery'].map((key) => (
+                                <button key={key} className={`role-tab ${activeRole === key ? 'active' : ''} ${key === 'seller' ? 'orange' : ''}`} onClick={() => setActiveRole(key)}>
+                                    <i className={`fas ${key === 'customer' ? 'fa-user' : key === 'seller' ? 'fa-store' : 'fa-truck'}`}></i> {t(lang, roles[key].labelKey)}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="steps-grid">
+                            {current.steps.map((step, i) => (
+                                <div className="step-card" key={i}>
+                                    <div className="step-number">{step.number}</div>
+                                    <span className="step-icon"><i className={`fas ${step.icon}`}></i></span>
+                                    <span className={`role-tag ${current.tag}`}>{current.tagLabel}</span>
+                                    <h4>{t(lang, step.titleKey)}</h4>
+                                    <p>{t(lang, step.descKey)}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        function ForEveryone({ lang }) {
+            const data = [
+                { roleKey: 'roleCustomer', icon: 'fa-user', color: 'blue', tagKey: 'roleCustomerTag', features: ['customerFeat1','customerFeat2','customerFeat3','customerFeat4','customerFeat5','customerFeat6'] },
+                { roleKey: 'roleSeller', icon: 'fa-store', color: 'orange', tagKey: 'roleSellerTag', features: ['sellerFeat1','sellerFeat2','sellerFeat3','sellerFeat4','sellerFeat5','sellerFeat6'] },
+                { roleKey: 'roleDeliveryPartner', icon: 'fa-truck', color: 'purple', tagKey: 'roleDeliveryTag', features: ['deliveryFeat1','deliveryFeat2','deliveryFeat3','deliveryFeat4','deliveryFeat5','deliveryFeat6'] }
+            ];
+            return (
+                <section id="for-everyone" className="for-everyone">
+                    <div className="container">
+                        <div className="section-title">
+                            <span className="label"><i className="fas fa-users"></i> {t(lang, 'forEveryoneLabel')}</span>
+                            <h2>{t(lang, 'forEveryoneTitle')}</h2>
+                            <p>{t(lang, 'forEveryoneDesc')}</p>
+                        </div>
+                        <div className="role-grid">
+                            {data.map((item, i) => (
+                                <div className="role-card" key={i}>
+                                    <div className="role-header">
+                                        <div className={`avatar ${item.color}`}><i className={`fas ${item.icon}`}></i></div>
+                                        <div><h3><span className={item.color}>{t(lang, item.roleKey)}</span></h3><div style={{ fontSize: '0.8rem', color: 'var(--dark-text)', opacity:0.7 }}>{t(lang, item.tagKey)}</div></div>
+                                    </div>
+                                    <ul>
+                                        {item.features.map((f, j) => (
+                                            <li key={j}><i className={`fas fa-check ${item.color === 'purple' ? 'orange' : item.color}`}></i> {t(lang, f)}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        function Stores({ lang }) {
+            const stores = [
+                { name: 'The Little Stationery', category: 'Cards, Art & Crafts', icon: '✏️', rating: '5.0', reviews: 1, distance: '0.7 km', time: '30-45 mins', open: true },
+                { name: 'Fresh Mart Grocery', category: 'Fruits, Vegetables & Dairy', icon: '🛒', rating: '4.8', reviews: 23, distance: '1.2 km', time: '20-30 mins', open: true },
+                { name: 'HealthPlus Pharmacy', category: 'Medicines & Wellness', icon: '💊', rating: '4.9', reviews: 12, distance: '0.5 km', time: '15-20 mins', open: true },
+                { name: 'TechZone Electronics', category: 'Gadgets & Accessories', icon: '📱', rating: '4.6', reviews: 8, distance: '2.1 km', time: '35-45 mins', open: false },
+                { name: 'Daily Needs Store', category: 'Household & Essentials', icon: '🧴', rating: '4.7', reviews: 15, distance: '0.9 km', time: '25-35 mins', open: true },
+                { name: 'Fashion Hub', category: 'Clothing & Accessories', icon: '👗', rating: '4.4', reviews: 6, distance: '1.8 km', time: '40-50 mins', open: false },
+            ];
+            const [filter, setFilter] = useState('all');
+            const filtered = filter === 'all' ? stores :
+                filter === 'open' ? stores.filter(s => s.open) :
+                filter === 'near' ? stores.filter(s => parseFloat(s.distance) < 1) :
+                filter === 'fast' ? stores.filter(s => parseInt(s.time) < 30) :
+                stores;
+            return (
+                <section className="stores-section">
+                    <div className="container">
+                        <div className="section-title">
+                            <span className="label"><i className="fas fa-store"></i> {t(lang, 'storesLabel')}</span>
+                            <h2>{t(lang, 'storesTitle')}</h2>
+                            <p>{t(lang, 'storesDesc')}</p>
+                        </div>
+                        <div className="stores-filter">
+                            {['all', 'open', 'near', 'fast'].map((f) => (
+                                <button key={f} className={filter === f ? 'active' : ''} onClick={() => setFilter(f)}>
+                                    {f === 'all' && t(lang, 'filterAll')}
+                                    {f === 'open' && t(lang, 'filterOpen')}
+                                    {f === 'near' && t(lang, 'filterNear')}
+                                    {f === 'fast' && t(lang, 'filterFast')}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="stores-grid">
+                            {filtered.map((store, i) => (
+                                <div className="store-card" key={i}>
+                                    <div className="store-top">
+                                        <div className="icon-box">{store.icon}</div>
+                                        {store.open ? <span className="badge-open">{t(lang, 'badgeOpen')}</span> : <span className="badge-open" style={{ background: '#fce4ec', color: '#c62828' }}>{t(lang, 'badgeClosed')}</span>}
+                                    </div>
+                                    <h4>{store.name}</h4>
+                                    <div className="store-category">{store.category}</div>
+                                    <div className="store-meta">
+                                        <span className="rating">⭐ {store.rating}({store.reviews})</span>
+                                        <span><i className="fas fa-location-dot"></i> {store.distance}</span>
+                                        <span><i className="fas fa-clock"></i> {store.time}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        function Contact({ lang }) {
+            return (
+                <section id="contact" className="contact-section">
+                    <div className="container">
+                        <div className="section-title">
+                            <span className="label"><i className="fas fa-envelope"></i> {t(lang, 'contactLabel')}</span>
+                            <h2>{t(lang, 'contactTitle')}</h2>
+                            <p>{t(lang, 'contactDesc')}</p>
+                        </div>
+                        <div className="contact-grid">
+                            <div className="contact-info">
+                                <h2>{t(lang, 'contactInfoTitle1')} <br /><span className="orange">{t(lang, 'contactInfoTitle2')}</span></h2>
+                                <p>{t(lang, 'contactInfoDesc')}</p>
+                                <div className="contact-item"><div className="icon-circle"><i className="fas fa-envelope"></i></div><div className="text">{t(lang, 'contactEmail')}<span>support@quicklick.co.in</span></div></div>
+                                <div className="contact-item"><div className="icon-circle orange"><i className="fas fa-globe"></i></div><div className="text">{t(lang, 'contactWebsite')}<span>quicklick.co.in</span></div></div>
+                                <div className="contact-item"><div className="icon-circle" style={{ background: '#e8f0fe', color: '#5e3c9b' }}><i className="fas fa-map-pin"></i></div><div className="text">{t(lang, 'contactLocation')}<span>{t(lang, 'contactLocationVal')}</span></div></div>
+                            </div>
+                            <div className="contact-form">
+                                <h4>{t(lang, 'contactFormTitle')}</h4>
+                                <p>{t(lang, 'contactFormDesc')}</p>
+                                <input type="text" placeholder={t(lang, 'contactNamePlaceholder')} />
+                                <input type="email" placeholder={t(lang, 'contactEmailPlaceholder')} />
+                                <textarea placeholder={t(lang, 'contactMsgPlaceholder')}></textarea>
+                                <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}><i className="fas fa-paper-plane"></i> {t(lang, 'contactBtnSend')}</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        function Footer({ lang }) {
+            return (
+                <footer className="footer">
+                    <div className="container">
+                        <div className="footer-grid">
+                            <div className="footer-brand">
+                                <div className="logo"><span className="quick">Quick</span><span className="lick">lick</span></div>
+                                <p>{t(lang, 'footerTagline')}</p>
+                            </div>
+                            <div className="footer-col">
+                                <h5>{t(lang, 'footerProduct')}</h5>
+                                <ul><li><a href="#features">{t(lang, 'navFeatures')}</a></li><li><a href="#how-it-works">{t(lang, 'navHowItWorks')}</a></li><li><a href="#for-everyone">{t(lang, 'navForEveryone')}</a></li></ul>
+                            </div>
+                            <div className="footer-col">
+                                <h5>{t(lang, 'footerCompany')}</h5>
+                                <ul><li><a href="#contact">{t(lang, 'navContact')}</a></li><li><a href="#">{t(lang, 'footerSupport')}</a></li><li><a href="#">{t(lang, 'footerBlog')}</a></li></ul>
+                            </div>
+                            <div className="footer-col">
+                                <h5>{t(lang, 'footerLegal')}</h5>
+                                <ul><li><a href="#">{t(lang, 'footerPrivacy')}</a></li><li><a href="#">{t(lang, 'footerTerms')}</a></li><li><a href="#">{t(lang, 'footerCookie')}</a></li></ul>
+                            </div>
+                        </div>
+                        <div className="footer-bottom">
+                            <span>{t(lang, 'footerCopyright')}</span>
+                            <span>{t(lang, 'footerPoweredBy')}</span>
+                            <span>{t(lang, 'footerMade')}</span>
+                        </div>
+                    </div>
+                </footer>
+            );
+        }
+
+        // ----- App -----
+        function App() {
+            const [lang, setLang] = useState('en');
+            return (
+                <>
+                    <Header lang={lang} setLang={setLang} />
+                    <Hero lang={lang} />
+                    <Features lang={lang} />
+                    <HowItWorks lang={lang} />
+                    <ForEveryone lang={lang} />
+                    <Stores lang={lang} />
+                    <Contact lang={lang} />
+                    <Footer lang={lang} />
+                </>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
